@@ -1,5 +1,6 @@
 import math
 import modOperations as modOp
+import rabinMiller
 class PublicKey:
 	def __init__(self,n,g):
 		self.n = n
@@ -19,8 +20,8 @@ def L(x,n):
 	return (x-1)//n
 
 def generateKeypair(bits):
-	p = 23
-	q = 29
+	p = rabinMiller.generatePrime(bits)
+	q = rabinMiller.generatePrime(bits)
 	n = p*q
 	phi = (p-1)*(q-1)
 	l = phi//math.gcd(p-1,q-1)
@@ -50,7 +51,7 @@ def decrypt(pr,pb,c):
 	m = m%pb.n
 	return m
 
-pr,pb = generateKeypair(5)
-print(repr(pb),repr(pr))
-print(pb.n2)
-print(encrypt(pb,161),decrypt(pr,pb,encrypt(pb,161)))
+# pr,pb = generateKeypair(15)
+# print(repr(pb),repr(pr))
+# print(pb.n2)
+# print(encrypt(pb,161),decrypt(pr,pb,encrypt(pb,161)))
