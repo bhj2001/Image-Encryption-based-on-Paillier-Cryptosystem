@@ -1,5 +1,5 @@
 import math
-
+import modOperations as modOp
 class PublicKey:
 	def __init__(self,n,g):
 		self.n = n
@@ -15,49 +15,42 @@ class PrivateKey:
 		return "Private Key : (%s, %s)" %(self.l,self.mu)
 
 
-def expoMod(base,exponent,mod):
-	ans = 1
-	while(exponent != 0 ):
-		if((exponent&1)):
-			ans = ans*base
-			ans = ans%mod
-		base = (base*base)%mod
-		exponent >>= 1
-	return ans
-
 def L(x,n):
 	return (x-1)//n
 
 def generateKeypair(bits):
-	p = 7
-	q = 11
+	p = 23
+	q = 29
 	n = p*q
 	phi = (p-1)*(q-1)
 	l = phi//math.gcd(p-1,q-1)
 	g = n+1
 	n2 = n*n
-	while(math.gcd(expoMod(g,l,n2),n)!=1):
+	while(math.gcd(modOp.expoMod(g,l,n2),n)!=1):
 		g += 1
 	#Inverse mod
-	mu = expoMod(L(expoMod(g,l,n2),n),phi-1,n)
+	mu = modOp.expoMod(L(modOp.expoMod(g,l,n2),n),phi-1,n)
 	return PrivateKey(l,mu), PublicKey(n,g)
 
 def encrypt(pb,msg):
 	#generate a prime
-	r = 3
+	msg = int(msg)
+	r = pb.n - 1
 	while(math.gcd(r,pb.n)!=1):
 		r+=1
 	
-	cipher = expoMod(r,pb.n,pb.n2)
-	cipher = cipher*(expoMod(pb.g,msg,pb.n2))
+	cipher = modOp.expoMod(r,pb.n,pb.n2)
+	cipher = cipher*(modOp.expoMod(pb.g,msg,pb.n2))
 	cipher = cipher%pb.n2
 	return cipher
 
 def decrypt(pr,pb,c):
-	m = L(expoMod(c,pr.l,pb.n2),pb.n) * pr.mu
+	c = int(c)
+	m = L(modOp.expoMod(c,pr.l,pb.n2),pb.n) * pr.mu
 	m = m%pb.n
 	return m
 
 pr,pb = generateKeypair(5)
 print(repr(pb),repr(pr))
-print(encrypt(pb,14),decrypt(pr,pb,encrypt(pb,14)))
+print(pb.n2)
+print(encrypt(pb,161),decrypt(pr,pb,encrypt(pb,161)))
