@@ -2,11 +2,11 @@ import cv2
 import paillier
 import numpy as np
 path = 'images/a.png'
-path = 'images/acolor.tiff'
+# path = 'images/acolor.tiff'
 # path = 'images/1000px-image.jpg'
 img = cv2.imread(path,1)
 c = np.copy(img)
-pr,pb = paillier.generateKeypair(5)
+pr,pb = paillier.generateKeypair(15)
 bb = []
 mod = 256
 for i in range(len(c)):
