@@ -19,9 +19,11 @@ class PrivateKey:
 def L(x,n):
 	return (x-1)//n
 
-def generateKeypair(bits):
-	p = rabinMiller.generatePrime(bits)
-	q = rabinMiller.generatePrime(bits)
+def generateKeypair(bits,k = 128 ):
+	p = rabinMiller.generatePrime(bits,k)
+	q = rabinMiller.generatePrime(bits,k)
+	while(p==q):
+		q = rabinMiller.generatePrime(bits,k)
 	n = p*q
 	phi = (p-1)*(q-1)
 	l = phi//math.gcd(p-1,q-1)
@@ -51,7 +53,19 @@ def decrypt(pr,pb,c):
 	m = m%pb.n
 	return m
 
-# pr,pb = generateKeypair(15)
+#Adding plaintext p to a ciphertext
+def homomorphicAddP(pb,c,p):
+	return (c*modOp.expoMod(pb.g,p,pb.n2))%pb.n2
+
+#Adding two CipherText
+def homomorphicAddC(pb,c1,c2):
+	return (c1*c2)%pb.n2
+
+def homomorphicMul(pb,c,p):
+	return modOp.expoMod(c,p,pb.n2)
+
+# pr,pb = generateKeypair(5)
 # print(repr(pb),repr(pr))
-# print(pb.n2)
-# print(encrypt(pb,161),decrypt(pr,pb,encrypt(pb,161)))
+# print(encrypt(pb,3),decrypt(pr,pb,encrypt(pb,3)))
+# print("Res : ",homomorphicAddP(pb,encrypt(pb,3),3))
+# print(decrypt(pr,pb,homomorphicMul(pb,encrypt(pb,3),3)))
