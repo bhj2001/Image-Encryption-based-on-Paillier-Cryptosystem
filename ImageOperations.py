@@ -44,10 +44,7 @@ def Secure_Noise_Reduction_LPF(enc_img, px, py,pb):
 				for jj in range(max(0, j - py), min(m - 1, j + py)):
 					den += 1
 					tmp_ij = paillier.homomorphicAddC(pb,tmp_ij,enc_img[ii][jj])
-			# tmp_ij = paillier.homomorphicMul(pb,tmp_ij,1/den)
-			tmp_ij = (1/den)**tmp_ij
-			tmp_ij = int(tmp_ij)
-			tmp_ij %= pb.n2
+			tmp_ij = paillier.homomorphicDivision(pb,tmp_ij,den)
 			ret_img[i][j] = tmp_ij
 	return ret_img
 
