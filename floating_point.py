@@ -64,16 +64,32 @@ def multiplyEncPlain(pb,x, y):
 
 	return FloatingPoint(paillier.homomorphicMul(pb, x.mantissa, y) , x.exponent + e)
 
-# def subtractEncPlain(pbx,y):
+def subtractEncEnc(pb,x,y):
+	"""
+	Unsafe
+	Subtract encrypted y from encrypted x
+	Do only when the result is positive
+	"""
+	# rewriting y
+	mantissa_x = x.mantissa
+	mantissa_y = y.mantissa
+	res_exponenet = min(y.exponent, x.exponent)
+	if x.exponent < y.exponent:
+		mantissa_y = paillier.homomorphicMul(pb,mantissa_y, 10 ** (y.exponent - x.exponent))
+	else:
+		mantissa_x = paillier.homomorphicMul(pb,mantissa_x, 10 ** (x.exponent - y.exponent))
+
+	res_mantissa = paillier.homomorphicSubCC(pb,mantissa_x, mantissa_y)
+	return FloatingPoint(res_mantissa, res_exponenet)
 
 
+# pr,pb = paillier.generateKeypair(9)
 
-pr,pb = paillier.generateKeypair(9)
-
-x = encryptFP(pb, 5)
-y = encryptFP(pb, 2)
+# x = encryptFP(pb, 5)
+# y = encryptFP(pb, 2)
 
 # print(getValue(pr, pb, x))
 # print(getValue(pr, pb, y))
+# print(getValue(pr,pb,subtractEncEnc(pb,y,x)))
 # print(getValue(pr,pb,addEncEnc(pb,x,y)))
 # print(getValue(pr, pb, multiplyEncPlain(pb,x, 3)))
