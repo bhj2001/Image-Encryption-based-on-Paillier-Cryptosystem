@@ -18,7 +18,7 @@ for i in range(len(c)):
 		E = paillier.encrypt(pb,int(c[i][j]))
 		bb[i][j] = E
 		c[i][j] = E%mod
-cv2.imshow('Encrypted',c)
+# cv2.imshow('Encrypted',c)
 m = np.copy(c)
 bc = 5
 for i in range(len(c)):
@@ -32,8 +32,10 @@ xx = cryp.Secure_Noise_Reduction_LPF(bb,1,1,pb)
 for i in range(len(c)):
 	for j in range(len(c[i])):
 		m[i][j] = min(255,paillier.decrypt(pr,pb,xx[i][j]))
+		# print(paillier.decrypt(pr,pb,xx[i][j]))
+		# exit()
 		naive[i][j] = max(0,255-img[i][j])
-cv2.imshow('Naive',naive)
+# cv2.imshow('Naive',naive)
 cv2.imshow('Pasys',m)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
