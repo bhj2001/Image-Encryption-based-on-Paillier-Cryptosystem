@@ -75,14 +75,19 @@ def homomorphicSubCC(pb,c1,c2):
 	inv = modOp.invMod(c2,pb.n2)
 	return (c1*inv)%pb.n2
 
+#divide by a constant if divible 
+def homomorphicDivision(pb,c,p):
+	pdash = modOp.invMod(p,pb.n)
+	return modOp.expoMod(c,pdash,pb.n2)
+
 # pr,pb = generateKeypair(9)
 # print(repr(pb),repr(pr))
-# # enc = encrypt(pb,140)
-# dec = decrypt(pr,pb,50782830819)
-# print(dec)
-# print("encoding",enc)
-# enc5 = encrypt(pb,184)
-
+# enc = encrypt(pb,140)
+# # print("encoding",enc)
+# b = 2
+# bprime = modOp.invMod(b,pb.n)
+# nenc = homomorphicDivision(pb,enc,3)
+# print(decrypt(pr,pb,nenc))
 # val = modOp.invMod(enc,pb.n2)
 # val = (val*enc5)%pb.n2
 # print(decrypt(pr,pb,val))
